@@ -1,9 +1,9 @@
 /* CSS Custom Properties for theme management */
 :root {
   /* Light theme colors */
-  --primary-color: #16588E;
+  --primary-color: #3b82f6;
   --secondary-color: #1e293b;
-  --accent-color: #FF8000;
+  --accent-color: #6366f1;
   --bg-color: #ffffff;
   --card-bg: #f8fafc;
   --text-color: #1e293b;

@@ -8,7 +8,7 @@ const navbar = document.querySelector('.navbar');
 // Theme Management
 class ThemeManager {
   constructor() {
-    this.currentTheme = localStorage.getItem('theme') || this.getAutoTheme();
+    this.currentTheme = localStorage.getItem('theme') || 'light';
     this.init();
   }
 
@@ -16,28 +16,6 @@ class ThemeManager {
     this.setTheme(this.currentTheme);
     this.updateThemeIcon();
     themeToggle.addEventListener('click', () => this.toggleTheme());
-    
-    // Set up auto theme switching based on time
-    this.setupAutoTheme();
-  }
-
-  getAutoTheme() {
-    const hour = new Date().getHours();
-    // Dark theme from 6 PM to 6 AM (18:00 to 06:00)
-    return (hour >= 18 || hour < 6) ? 'dark' : 'light';
-  }
-
-  setupAutoTheme() {
-    // Check every minute if theme should auto-switch
-    setInterval(() => {
-      const autoTheme = this.getAutoTheme();
-      if (!localStorage.getItem('theme-manual-override')) {
-        if (autoTheme !== this.currentTheme) {
-          this.setTheme(autoTheme);
-          this.updateThemeIcon();
-        }
-      }
-    }, 60000); // Check every minute
   }
 
   setTheme(theme) {
@@ -50,9 +28,6 @@ class ThemeManager {
     const newTheme = this.currentTheme === 'light' ? 'dark' : 'light';
     this.setTheme(newTheme);
     this.updateThemeIcon();
-    
-    // Set manual override flag when user manually changes theme
-    localStorage.setItem('theme-manual-override', 'true');
     
     // Add a subtle animation effect
     document.body.style.transition = 'all 0.3s ease';
