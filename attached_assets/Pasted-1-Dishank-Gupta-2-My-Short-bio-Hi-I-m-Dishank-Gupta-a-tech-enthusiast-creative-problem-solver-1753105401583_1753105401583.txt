@@ -1,0 +1,32 @@
+1. Dishank Gupta
+2. My Short bio - Hi! I’m Dishank Gupta—a tech enthusiast, creative problem solver, and someone who thrives oncuriosity and new challenges. My journey into software development is fueled by a passion forinnovation, analytical thinking, and the excitement of building things from scratch.
+I love approaching problems from unique angles and get motivated by learning something newevery day. As an ENTP (“The Debater”) and a Type 7w5 (“The Explorer”) personality, I combinebig-picture thinking with sharp logic, adaptability, and a knack for finding creative solutions.Whether it’s coding a web app, brainstorming new ideas, or tackling complex problems, I bringenergy and an open mind.
+My interests range from tech and coding to strategy games and adventure sports. On my site,you’ll find my latest projects, insights, and the lessons I’m picking up along the way. Let’sconnect and build something innovative together!
+Fun facts:
+⁂
+About Me
+[
+1]
+Quick to learn, slower to get bored—variety drives me.
+I value collaboration, open conversation, and a good challenge.
+My motto:
+Curiosity, logic, and a dash of fun make anything possible.
+3. @ProfilePic.jpeg use this as my profile picture.
+4. Personal Portfolio Website
+Crafted a clean, responsive website to showcase my journey, skills, and key accomplishments.
+Built using HTML, CSS, and JavaScript, with a focus on hands-on learning and creative design.
+Deployed live as a central hub for connecting and sharing my progress.
+
+Interactive To-Do List App
+Developed a dynamic web app for managing daily tasks and goals.
+Utilizes JavaScript and local storage to track and persist task data.
+Helped solidify skills in DOM manipulation and building user-friendly interfaces.
+
+Weather App with API Integration
+Created an application that fetches and displays real-time weather data for any city.
+Integrated APIs and worked with JSON to handle external data sources.
+Strengthened abilities in JavaScript, API calls, and delivering practical, real-world functionality.
+
+Links to these I will provide later.
+5. @https://github.com/dishankgupta This is my github profile link. my email is dishank.2427@gmail.com that needs to be on the website.
+6. I prefer Auto switching theme. My fav colours are McLaren Orange, and BMW Blue color hex code 16588E
