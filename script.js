@@ -372,6 +372,8 @@ class PortfolioApp {
     this.scrollAnimations = new ScrollAnimations();
     this.projectAnimations = new ProjectAnimations();
     this.performanceOptimizer = new PerformanceOptimizer();
+    // In your PortfolioApp class init() method, add:
+    this.devToBlogManager = new AdvancedDevToBlogManager();
 
     // Add custom CSS for animations
     this.addAnimationStyles();
@@ -547,3 +549,301 @@ if ('serviceWorker' in navigator) {
     console.log('Portfolio app loaded successfully');
   });
 }
+// Advanced Blog Manager - Add this to your script.js file
+
+class AdvancedDevToBlogManager {
+  constructor() {
+      this.apiUrl = 'https://dev.to/api/articles';
+      this.username = 'dishankg';
+      this.posts = [];
+      this.currentPage = 1;
+      this.postsPerPage = 6;
+      this.isLoading = false;
+      this.init();
+  }
+
+  async init() {
+      this.createBlogModal();
+      await this.loadBlogPosts();
+      this.setupEventListeners();
+  }
+
+  async loadBlogPosts(page = 1) {
+      if (this.isLoading) return;
+      this.isLoading = true;
+
+      try {
+          const response = await fetch(`${this.apiUrl}?username=${this.username}&page=${page}&per_page=${this.postsPerPage}`);
+          
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const posts = await response.json();
+          
+          if (page === 1) {
+              this.posts = posts;
+          } else {
+              this.posts = [...this.posts, ...posts];
+          }
+          
+          this.renderBlogPosts();
+          this.updateLoadMoreButton(posts.length);
+      } catch (error) {
+          console.error('Failed to load blog posts:', error);
+          this.showFallbackMessage();
+      } finally {
+          this.isLoading = false;
+      }
+  }
+
+  renderBlogPosts() {
+      const blogGrid = document.getElementById('blog-posts-grid');
+      if (!blogGrid) return;
+
+      blogGrid.innerHTML = '';
+
+      if (this.posts.length === 0) {
+          this.showFallbackMessage();
+          return;
+      }
+
+      this.posts.forEach((post, index) => {
+          const blogCard = this.createAdvancedBlogCard(post, index);
+          blogGrid.appendChild(blogCard);
+      });
+  }
+
+  createAdvancedBlogCard(post, index) {
+      const article = document.createElement('article');
+      article.className = 'blog-card advanced-blog-card';
+      
+      const publishedDate = new Date(post.published_at).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+      });
+
+      const coverImage = post.cover_image || this.generatePlaceholderImage(post.title);
+      const readingTime = Math.ceil(post.reading_time_minutes) || 5;
+      const excerpt = post.description || 'Click to read this insightful post about my development journey...';
+
+      article.innerHTML = `
+          <div class="blog-image">
+              <img src="${coverImage}" alt="${post.title}" loading="lazy" onerror="this.src='${this.generatePlaceholderImage(post.title)}'">
+              <div class="blog-overlay">
+                  <button class="preview-btn" data-post-index="${index}">
+                      Quick Preview
+                  </button>
+              </div>
+          </div>
+          <div class="blog-content">
+              <div class="blog-meta">
+                  <span class="blog-date">${publishedDate}</span>
+                  <span class="reading-time">${readingTime} min read</span>
+              </div>
+              <h3 class="blog-title">
+                  <a href="${post.url}" target="_blank" rel="noopener">
+                      ${post.title}
+                  </a>
+              </h3>
+              <p class="blog-excerpt">
+                  ${excerpt}
+              </p>
+              <div class="blog-tags">
+                  ${post.tag_list.slice(0, 3).map(tag => `<span class="tag">${tag}</span>`).join('')}
+                  ${post.tag_list.length > 3 ? `<span class="tag-more">+${post.tag_list.length - 3}</span>` : ''}
+              </div>
+              <div class="blog-actions">
+                  <div class="blog-stats">
+                      <span class="stat">❤️ ${post.public_reactions_count || 0}</span>
+                      <span class="stat">💬 ${post.comments_count || 0}</span>
+                  </div>
+                  <div class="blog-links">
+                      <button class="blog-link preview-link" data-post-index="${index}">
+                          Preview
+                      </button>
+                      <a href="${post.url}" target="_blank" rel="noopener" class="blog-link external-link">
+                          Read Full Post
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                              <polyline points="15,3 21,3 21,9"/>
+                              <line x1="10" y1="14" x2="21" y2="3"/>
+                          </svg>
+                      </a>
+                  </div>
+              </div>
+          </div>
+      `;
+
+      return article;
+  }
+
+  createBlogModal() {
+      // Modal is created in HTML - this method can be used for dynamic creation if needed
+      const existingModal = document.getElementById('blog-modal');
+      if (existingModal) return;
+
+      const modal = document.createElement('div');
+      modal.id = 'blog-modal';
+      modal.className = 'blog-modal';
+      modal.innerHTML = `
+          <div class="modal-overlay" id="modal-overlay"></div>
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h2 id="modal-title">Blog Post Preview</h2>
+                  <button class="modal-close" id="modal-close" aria-label="Close modal">&times;</button>
+              </div>
+              <div class="modal-body" id="modal-body">
+                  <!-- Post content will be loaded here -->
+              </div>
+              <div class="modal-footer">
+                  <a href="#" target="_blank" rel="noopener" class="btn btn-primary" id="modal-read-full">
+                      Read Full Post on dev.to
+                  </a>
+              </div>
+          </div>
+      `;
+      document.body.appendChild(modal);
+  }
+
+  setupEventListeners() {
+      // Modal event listeners
+      document.addEventListener('click', (e) => {
+          if (e.target.matches('.preview-btn, .preview-link')) {
+              e.preventDefault();
+              const postIndex = parseInt(e.target.dataset.postIndex);
+              this.openPostPreview(postIndex);
+          }
+          
+          if (e.target.matches('#modal-close, #modal-overlay')) {
+              this.closeModal();
+          }
+      });
+
+      // Load more functionality
+      const loadMoreBtn = document.getElementById('load-more-posts');
+      if (loadMoreBtn) {
+          loadMoreBtn.addEventListener('click', () => {
+              this.currentPage++;
+              this.loadBlogPosts(this.currentPage);
+          });
+      }
+
+      // Keyboard accessibility
+      document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+              this.closeModal();
+          }
+      });
+  }
+
+  async openPostPreview(postIndex) {
+      const post = this.posts[postIndex];
+      if (!post) return;
+
+      const modal = document.getElementById('blog-modal');
+      const modalTitle = document.getElementById('modal-title');
+      const modalBody = document.getElementById('modal-body');
+      const modalReadFull = document.getElementById('modal-read-full');
+
+      modalTitle.textContent = post.title;
+      modalReadFull.href = post.url;
+
+      // Show loading state
+      modalBody.innerHTML = '<div class="blog-loading"><div class="loading-spinner"></div><p>Loading post preview...</p></div>';
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+
+      try {
+          const postContent = this.getPostPreview(post);
+          modalBody.innerHTML = postContent;
+      } catch (error) {
+          console.error('Error loading post preview:', error);
+          modalBody.innerHTML = `
+              <div class="modal-error">
+                  <p>Unable to load preview. Please read the full post on dev.to.</p>
+                  <p><strong>Description:</strong> ${post.description || 'No description available'}</p>
+              </div>
+          `;
+      }
+  }
+
+  getPostPreview(post) {
+      const publishedDate = new Date(post.published_at).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+      });
+
+      const description = post.description || "This post shares insights from my journey in web development, including personal experiences, lessons learned, and practical tips for fellow developers and career changers.";
+
+      return `
+          <div class="post-preview">
+              ${post.cover_image ? `<img src="${post.cover_image}" alt="${post.title}" class="post-cover">` : ''}
+              <div class="post-meta">
+                  <span class="post-date">Published on ${publishedDate}</span>
+                  <span class="post-reading-time">${post.reading_time_minutes || 5} min read</span>
+              </div>
+              <div class="post-description">
+                  <p>${description}</p>
+              </div>
+              <div class="post-tags">
+                  ${post.tag_list.map(tag => `<span class="preview-tag">${tag}</span>`).join('')}
+              </div>
+              <div class="post-stats">
+                  <div class="stat-item">
+                      <strong>${post.public_reactions_count || 0}</strong>
+                      <span>reactions</span>
+                  </div>
+                  <div class="stat-item">
+                      <strong>${post.comments_count || 0}</strong>
+                      <span>comments</span>
+                  </div>
+              </div>
+          </div>
+      `;
+  }
+
+  closeModal() {
+      const modal = document.getElementById('blog-modal');
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+  }
+
+  generatePlaceholderImage(title) {
+      const colors = ['6366f1', '3b82f6', '8b5cf6', 'f59e0b', 'ef4444'];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const encodedTitle = encodeURIComponent(title.substring(0, 30));
+      return `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="%23${color}"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="white" font-family="system-ui" font-size="14" font-weight="600">${encodedTitle}</text></svg>`;
+  }
+
+  updateLoadMoreButton(postsLoaded) {
+      const loadMoreBtn = document.getElementById('load-more-posts');
+      if (!loadMoreBtn) return;
+
+      if (postsLoaded < this.postsPerPage) {
+          loadMoreBtn.style.display = 'none';
+      } else {
+          loadMoreBtn.style.display = 'block';
+      }
+  }
+
+  showFallbackMessage() {
+      const blogGrid = document.getElementById('blog-posts-grid');
+      if (!blogGrid) return;
+
+      blogGrid.innerHTML = `
+          <div class="blog-fallback">
+              <h3>More posts coming soon!</h3>
+              <p>I'm actively writing about my development journey, AI-assisted learning, and career change experiences. Follow me on dev.to to get notified of new posts!</p>
+              <a href="https://dev.to/dishankg" target="_blank" rel="noopener" class="btn btn-primary">
+                  Follow on dev.to
+              </a>
+          </div>
+      `;
+  }
+}
+
+// Initialize the blog manager - Add this to your PortfolioApp init() method:
+// this.devToBlogManager = new AdvancedDevToBlogManager();

@@ -24,6 +24,10 @@
                 <li class="nav-item">
                     <a href="#projects" class="nav-link">Projects</a>
                 </li>
+                <!-- In your nav-menu, add this after the Projects nav item -->
+                <li class="nav-item">
+                    <a href="#blog" class="nav-link">Blog</a>
+                </li>
                 <li class="nav-item">
                     <a href="#contact" class="nav-link">Contact</a>
                 </li>
@@ -264,6 +268,60 @@
             </div>
         </div>
     </section>
+    <!-- Blog Section - Add this after your projects section in index.html -->
+<section id="blog" class="blog">
+    <div class="container">
+        <h2 class="section-title">Latest Blog Posts</h2>
+        <p class="section-subtitle">
+            Sharing my journey in web development, AI-assisted learning, and personal growth
+        </p>
+        
+        <div id="blog-posts-grid" class="blog-grid advanced-grid">
+            <!-- Loading state -->
+            <div class="blog-loading">
+                <div class="loading-spinner"></div>
+                <p>Loading latest posts from dev.to...</p>
+            </div>
+        </div>
+
+        <div class="blog-actions-container">
+            <button id="load-more-posts" class="btn btn-secondary" style="display: none;">
+                Load More Posts
+            </button>
+        </div>
+
+        <div class="blog-cta">
+            <p>Enjoying my content? Let's connect and learn together!</p>
+            <div class="cta-buttons">
+                <a href="https://dev.to/dishankg" target="_blank" rel="noopener" class="btn btn-primary">
+                    Follow on dev.to
+                </a>
+                <a href="#contact" class="btn btn-secondary">
+                    Get In Touch
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal - Add this at the end of your body tag -->
+<div class="blog-modal" id="blog-modal">
+    <div class="modal-overlay" id="modal-overlay"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modal-title">Blog Post Preview</h2>
+            <button class="modal-close" id="modal-close" aria-label="Close modal">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body">
+            <!-- Post content will be loaded here -->
+        </div>
+        <div class="modal-footer">
+            <a href="#" target="_blank" rel="noopener" class="btn btn-primary" id="modal-read-full">
+                Read Full Post on dev.to
+            </a>
+        </div>
+    </div>
+</div>
 
     <!-- Contact Section -->
     <section id="contact" class="contact">
