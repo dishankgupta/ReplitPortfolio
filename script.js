@@ -573,7 +573,8 @@ class AdvancedDevToBlogManager {
       this.isLoading = true;
 
       try {
-          const response = await fetch(`${this.apiUrl}?username=${this.username}&page=${page}&per_page=${this.postsPerPage}`);
+          const cacheBuster = Date.now();
+          const response = await fetch(`${this.apiUrl}?username=${this.username}&page=${page}&per_page=${this.postsPerPage}&_=${cacheBuster}`);
           
           if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
